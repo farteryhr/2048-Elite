@@ -75,6 +75,24 @@ GameManager.prototype.addRandomTile = function () {
   }
 };
 
+// Adds a tile in a random position according to current tiles
+GameManager.prototype.addRandomTileElite = function () {
+  if (this.grid.cellsAvailable()) {
+    var tiles = [];
+    this.grid.eachCell(function (x, y, tile) {
+      if (tile) {
+        tiles.push(tile);
+      }
+    });
+    if (tiles.length) {
+      var value = tiles[~~(Math.random() * tiles.length)].value;
+      var tile = new Tile(this.grid.randomAvailableCell(), value);
+
+      this.grid.insertTile(tile);
+    }
+  }
+};
+
 // Sends the updated grid to the actuator
 GameManager.prototype.actuate = function () {
   if (this.storageManager.getBestScore() < this.score) {
@@ -180,7 +198,7 @@ GameManager.prototype.move = function (direction) {
   });
 
   if (moved) {
-    this.addRandomTile();
+    this.addRandomTileElite();
 
     if (!this.movesAvailable()) {
       this.over = true; // Game over!
